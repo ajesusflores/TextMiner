@@ -1,0 +1,25 @@
+﻿{
+  "name": "AF.IronCsv",
+
+  "title": "Iron Csv",
+
+  "version": "1.0.0",
+
+  "authors": [ "Alfonso J Flores" ],
+
+  "description": "",
+
+  "dependencies": {
+    "NETStandard.Library": "1.6.0"
+  },
+
+  "frameworks": {
+    "netstandard1.4": {
+      "imports": "dnxcore50"
+    }
+  },
+
+  "packOptions": {
+    "owners": [ "Alfonso J Flores" ]
+  }
+}
