@@ -1,2 +1,2 @@
 # TextMiner
-Text mining tools useful for machine learning
+Text mining tools. Useful for machine learning
