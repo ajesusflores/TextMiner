@@ -1,7 +1,7 @@
-﻿{
-  "name": "AF.IronCsv",
+{
+  "name": "AF.TextMiner",
 
-  "title": "Iron Csv",
+  "title": "Text Miner",
 
   "version": "1.0.0",
 
@@ -10,7 +10,8 @@
   "description": "",
 
   "dependencies": {
-    "NETStandard.Library": "1.6.0"
+    "AF.IronCsv": "1.0.6",
+    "NETStandard.Library": "1.6.1"
   },
 
   "frameworks": {
