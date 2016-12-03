@@ -28,13 +28,14 @@ namespace AF.TextMiner
             {
                 foreach (string gram in GetWords(textToProcess, i))
                 {
-                    if (corpus.NGrams.Exists(x => x.Text == gram))
+                    var tmpNgram = corpus.NGrams.Find(x => x.GramSize == i &&  x.Text == gram);
+                    if(tmpNgram != null)
                     {
-                        corpus.NGrams.Find(x => x.Text == gram).Count++;
+                        tmpNgram.Count++;
                     }
                     else
                     {
-                        corpus.NGrams.Add(new NGram() { Count = 1, GramSize = 1, Text = gram });
+                        corpus.NGrams.Add(new NGram() { Count = 1, GramSize = i, Text = gram });
                     }
                 }
             }
