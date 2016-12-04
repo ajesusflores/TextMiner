@@ -1,16 +1,19 @@
-﻿{
-  "name": "AF.IronCsv",
+{
+  "name": "AF.TextMiner",
 
-  "title": "Iron Csv",
+  "title": "AF.TextMiner",
 
-  "version": "1.0.0",
+  "version": "1.0.3",
 
   "authors": [ "Alfonso J Flores" ],
 
-  "description": "",
+  "description": "Gets ngrams and cleans text.",
+
+  "projectUrl": "https://github.com/ajesusflores/TextMiner",
 
   "dependencies": {
-    "NETStandard.Library": "1.6.0"
+    "AF.IronCsv": "1.0.6",
+    "NETStandard.Library": "1.6.1"
   },
 
   "frameworks": {
@@ -20,6 +23,10 @@
   },
 
   "packOptions": {
-    "owners": [ "Alfonso J Flores" ]
+    "owners": [ "Alfonso J Flores" ],
+
+    "summary": "Library to get ngrams, useful for Machine Learning",
+
+    "tags": [ "Machine", "Learning", "Machine Learning", "Ngrams", "Text cleaning", "Text classification" ]
   }
 }
