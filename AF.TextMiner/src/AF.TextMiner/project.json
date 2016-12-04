@@ -1,13 +1,15 @@
 {
   "name": "AF.TextMiner",
 
-  "title": "Text Miner",
+  "title": "AF.TextMiner",
 
-  "version": "1.0.0",
+  "version": "1.0.3",
 
   "authors": [ "Alfonso J Flores" ],
 
-  "description": "",
+  "description": "Gets ngrams and cleans text.",
+
+  "projectUrl": "https://github.com/ajesusflores/TextMiner",
 
   "dependencies": {
     "AF.IronCsv": "1.0.6",
@@ -21,6 +23,10 @@
   },
 
   "packOptions": {
-    "owners": [ "Alfonso J Flores" ]
+    "owners": [ "Alfonso J Flores" ],
+
+    "summary": "Library to get ngrams, useful for Machine Learning",
+
+    "tags": [ "Machine", "Learning", "Machine Learning", "Ngrams", "Text cleaning", "Text classification" ]
   }
 }

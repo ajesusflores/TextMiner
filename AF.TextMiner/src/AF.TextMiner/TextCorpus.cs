@@ -7,7 +7,7 @@ namespace AF.TextMiner
 {
     public class TextCorpus
     {
-        static string punctuation = ",.:;!";
+        static string punctuation = ",.:;!?";
 
         public string  Identifier { get; set; }
         public List<NGram> NGrams { get; }
