@@ -24,12 +24,12 @@ namespace AF.TextMiner.Test
             string only3words = "words words words.";
             string tweet_neg1 = "Para   qu no soy tan duro  Hay algo peor que #messi  Y es a propaganda de #movistar !!";
             string tweet_pos1 = "Felicidades a @Telcel xq despues de hacerme prdr mi tiempo durante 1 mes y hacerme pagar sin recib el serv, me dieron soluc, bravo! hurra!";
-            string cleanedTweet_neg1 = AF.TextMiner.TextCleaning.Actions.Clean(tweet_neg1, config);
+            string cleanedTweet_neg1 = AF.TextMiner.TextCleaning.CleaningActions.Clean(tweet_neg1, config);
 
 
-            var corpus = AF.TextMiner.TextCorpus.GenerateNewCorpus("test", cleanedTweet_neg1);
+            var corpus = AF.TextMiner.TextCorpus.GenerateNewCorpus("test", text3);
 
-
+            corpus.CalculatePercentagesAndSort();
             System.Console.ReadLine();
         }
     }

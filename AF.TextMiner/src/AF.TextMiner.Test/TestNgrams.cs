@@ -1,0 +1,59 @@
+﻿using Xunit;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace AF.TextMiner.Test
+{
+    
+    public class TestNgrams
+    {
+        string textToProcess = @"The probability and statistics cookbook is a succinct representation of various topics in probability theory and statistics. It provides a comprehensive mathematical reference reduced to its essence, rather than aiming for elaborate explanations.";
+        string text2 = "probability theory and statistics. It provides a comprehensive mathematical. It provides a comprehensive";
+        string text3 = "probability theory and statistics";
+        string textWith2And = "The probability and statistics cookbook is a succinct representation of various topics in probability theory and statistics.";
+        string only3words = "words words words";
+        string tweet_neg1 = "Para   qu no soy tan duro  Hay algo peor que #messi  Y es a propaganda de #movistar !!";
+        string tweet_pos1 = "Felicidades a @Telcel xq despues de hacerme prdr mi tiempo durante 1 mes y hacerme pagar sin recib el serv, me dieron soluc, bravo! hurra!";
+        string tweet_account = "Felicidades a @Telcel";
+        AF.TextMiner.TextCleaning.TextCleaningConfiguration config = new AF.TextMiner.TextCleaning.TextCleaningConfiguration()
+        {
+            RemoveTwitterAccounts = true
+        };
+
+
+        [Fact]
+        public void TesMethod()
+        {
+            var corpus = AF.TextMiner.TextCorpus.GenerateNewCorpus("test", only3words);
+
+            Assert.Equal(corpus.NGrams.Where(x => x.GramSize == 2 && x.Text == "words words").FirstOrDefault().Count, 2);
+            //Assert.Equal(corpus.NGrams.Where(x => x.GramSize == 3).Count(), 1);
+            //Assert.Equal(corpus.NGrams.Where(x => x.GramSize == 4).Count(), 0);
+        }
+
+        [Fact]
+        public void TextCleaning_TwitterAccount()
+        {
+            string text = AF.TextMiner.TextCleaning.CleaningActions.Clean(tweet_account, config);
+
+            Assert.DoesNotContain("@Telcel", text);
+        }
+
+        [Fact]
+        public void TextCorpus_TestSortAndPercentages()
+        {
+            var corpus = AF.TextMiner.TextCorpus.GenerateNewCorpus("test", text2);
+
+            corpus.CalculatePercentagesAndSort();
+
+            var dos = corpus.NGrams.Where(x => x.GramSize == 2).Sum(x => x.Percentaje);
+            var tres = corpus.NGrams.Where(x => x.GramSize == 3).Sum(x => x.Percentaje);
+            var cuatro = corpus.NGrams.Where(x => x.GramSize == 4).Sum(x => x.Percentaje);
+
+            Assert.InRange(dos.Value, 0.9999, 1);
+            Assert.InRange(tres.Value, 0.9999, 1);
+            Assert.InRange(cuatro.Value, 0.9999, 1);
+        }
+    }
+}

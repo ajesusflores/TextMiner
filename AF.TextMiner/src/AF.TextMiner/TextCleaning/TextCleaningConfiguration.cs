@@ -10,5 +10,6 @@ namespace AF.TextMiner.TextCleaning
         public bool ToLowerCase { get; set; }
         public bool ReplaceDoubleSpace { get; set; }
         public bool RemoveLinks { get; set; }
+        public bool RemoveTwitterAccounts { get; set; }
     }
 }

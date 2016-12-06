@@ -7,24 +7,25 @@ namespace AF.TextMiner
 {
     public class TextCorpus
     {
-        static string punctuation = ",.:;!?";
+        static string punctuation = @",.:;!?&^-%$/()=¿\";
+        private List<NGram> _ngrams;
 
         public string  Identifier { get; set; }
-        public List<NGram> NGrams { get; }
+        public List<NGram> NGrams { get { return _ngrams; } }
 
         public double TotalWords { get { return NGrams.Sum(x => (double) (x.Count ?? 0)); } }
 
         public TextCorpus(string identifier)
         {
             Identifier = identifier;
-            NGrams = new List<NGram>();
+            _ngrams = new List<NGram>();
         }
 
         public static TextCorpus GenerateNewCorpus(string corpusIdentifier, string textToProcess)
         {
             TextCorpus corpus = new TextCorpus(corpusIdentifier);
-            List<NGram> ngrams = new List<NGram>();
-            for(byte i = 1; i <= 4; i++)
+            //List<NGram> ngrams = new List<NGram>();
+            for(byte i = 2; i <= 4; i++)
             {
                 foreach (string gram in GetWords(textToProcess, i))
                 {
@@ -55,15 +56,18 @@ namespace AF.TextMiner
                 char current = text[i];
                 if (punctuation.Contains(current)) // puntuation
                 {
-                    spaceCount = 0;
-                    words.Add(tmpContent);
-                    if (ngrams.Exists(x => x.Text == tmpContent))
-                        ngrams.Find(x => x.Text == tmpContent).Count++;
-                    else
-                        ngrams.Add(new NGram() { Count = 1, GramSize = gramSize, Text = text });
-                    tmpContent = string.Empty;
+                    if (++spaceCount == gramSize)
+                    {
+                        words.Add(tmpContent);
+
+                        spaceCount = 0;
+
+                        //i = lastSpaceFound != 0 ? lastSpaceFound : i;
+                        lastSpaceFound = 0;
+                        tmpContent = string.Empty;
+                    }
                 }
-                else if (current == ' ')    // blank space
+                else if (current == ' ')   // blank space
                 {
                     if (!string.IsNullOrWhiteSpace(tmpContent))
                     {
@@ -90,6 +94,25 @@ namespace AF.TextMiner
                     tmpContent += current;
             }
             return words;
+        }
+
+        public void CalculatePercentagesAndSort()
+        {
+            CalculatePercentages();
+            Sort();
+        }
+
+        private void CalculatePercentages()
+        {
+            foreach(var element in _ngrams)
+            {
+                element.Percentaje = (double) element.Count / _ngrams.Where(x => x.GramSize == element.GramSize).Sum(x => x.Count);
+            }
+        }
+
+        private void Sort()
+        {
+            this._ngrams = this._ngrams.OrderBy(x => x.GramSize).ThenByDescending(x => x.Percentaje).ToList();
         }
     }
 }
