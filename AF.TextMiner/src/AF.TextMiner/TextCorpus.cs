@@ -56,16 +56,18 @@ namespace AF.TextMiner
                 char current = text[i];
                 if (punctuation.Contains(current)) // puntuation
                 {
-                    if (++spaceCount == gramSize)
+                    if (spaceCount == gramSize)
                     {
                         words.Add(tmpContent);
 
-                        spaceCount = 0;
+                        
 
                         //i = lastSpaceFound != 0 ? lastSpaceFound : i;
                         lastSpaceFound = 0;
-                        tmpContent = string.Empty;
+
                     }
+                    spaceCount = 0;
+                    tmpContent = string.Empty;
                 }
                 else if (current == ' ')   // blank space
                 {
