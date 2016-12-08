@@ -17,10 +17,12 @@ namespace AF.TextMiner.Test
         string tweet_pos1 = "Felicidades a @Telcel xq despues de hacerme prdr mi tiempo durante 1 mes y hacerme pagar sin recib el serv, me dieron soluc, bravo! hurra!";
         string tweet_account = "Felicidades a @Telcel";
         string textAfterPeriod = "y es a propaganda de #movistar !!. si @telcel me manda otro";
+        string textLinks = @"http://stackoverflow.com/questions/26519893/how-do-i-remove-url-from-text";
         string tweetsConcatenados = "para qu no soy tan duro hay algo peor que #messi y es a propaganda de #movistar !!. si @telcel me manda otro estupido mensaje de promocion al celular ire a meterselos por el cu%&amp;. aaaaaa quiero meter una tarjeta de mensajes desdayer y nada q agarra movistar!!. tontamente cambie @telcel por sus promesas de mejor servicio @nextelmx, y ya contratado imposible cancelar solo son ganchos";
         AF.TextMiner.TextCleaning.TextCleaningConfiguration config = new AF.TextMiner.TextCleaning.TextCleaningConfiguration()
         {
-            RemoveTwitterAccounts = true
+            RemoveTwitterAccounts = true,
+            RemoveLinks = true
         };
 
 
@@ -29,9 +31,9 @@ namespace AF.TextMiner.Test
         {
             var corpus = AF.TextMiner.TextCorpus.GenerateNewCorpus("test", only3words);
 
-            Assert.Equal(corpus.NGrams.Where(x => x.GramSize == 2 && x.Text == "words words").FirstOrDefault().Count, 2);
-            //Assert.Equal(corpus.NGrams.Where(x => x.GramSize == 3).Count(), 1);
-            //Assert.Equal(corpus.NGrams.Where(x => x.GramSize == 4).Count(), 0);
+            Assert.Equal(corpus.NGrams_.Where(x => x.GramSize == 2 && x.Text == "words words").FirstOrDefault().Count, 2);
+            Assert.Equal(corpus.NGrams_.Where(x => x.GramSize == 3 && x.Text == "words words words").FirstOrDefault().Count, 1);
+            Assert.Equal(corpus.NGrams_.Where(x => x.GramSize == 4 && x.Text == "words words words words").FirstOrDefault(), null);
         }
 
         [Fact]
@@ -49,13 +51,13 @@ namespace AF.TextMiner.Test
 
             corpus.CalculatePercentagesAndSort();
 
-            var dos = corpus.NGrams.Where(x => x.GramSize == 2).Sum(x => x.Percentaje);
-            var tres = corpus.NGrams.Where(x => x.GramSize == 3).Sum(x => x.Percentaje);
-            var cuatro = corpus.NGrams.Where(x => x.GramSize == 4).Sum(x => x.Percentaje);
+            var dos = corpus.NGrams_.Where(x => x.GramSize == 2).Sum(x => x.Percentaje);
+            var tres = corpus.NGrams_.Where(x => x.GramSize == 3).Sum(x => x.Percentaje);
+            var cuatro = corpus.NGrams_.Where(x => x.GramSize == 4).Sum(x => x.Percentaje);
 
-            Assert.InRange(dos.Value, 0.999999, 1);
-            Assert.InRange(tres.Value, 0.999999, 1);
-            Assert.InRange(cuatro.Value, 0.999999, 1);
+            Assert.InRange(dos.Value, 0.99999999, 1);
+            Assert.InRange(tres.Value, 0.99999999, 1);
+            Assert.InRange(cuatro.Value, 0.99999999, 1);
         }
 
         [Fact]
@@ -64,7 +66,7 @@ namespace AF.TextMiner.Test
             tweetsConcatenados = AF.TextMiner.TextCleaning.CleaningActions.Clean(tweetsConcatenados, config);
             var corpus = AF.TextMiner.TextCorpus.GenerateNewCorpus("test", tweetsConcatenados);
 
-            var element = corpus.NGrams.Any(x => string.IsNullOrWhiteSpace(x.Text));
+            var element = corpus.NGrams_.Any(x => string.IsNullOrWhiteSpace(x.Text));
 
             Assert.Equal(false, element);
         }
@@ -75,9 +77,17 @@ namespace AF.TextMiner.Test
             //tweetsConcatenados = AF.TextMiner.TextCleaning.CleaningActions.Clean(tweetsConcatenados, config);
             var corpus = AF.TextMiner.TextCorpus.GenerateNewCorpus("test", textAfterPeriod);
 
-            var element = corpus.NGrams.Any(x => x.Text == "si");
+            var element = corpus.NGrams_.Any(x => x.Text == "si");
 
             Assert.Equal(false, element);
+        }
+
+        [Fact]
+        public void TextCleaning_RemoveLinks()
+        {
+            string text = AF.TextMiner.TextCleaning.CleaningActions.Clean(textLinks, config);
+
+            Assert.Equal(true, string.IsNullOrWhiteSpace(text));
         }
     }
 }

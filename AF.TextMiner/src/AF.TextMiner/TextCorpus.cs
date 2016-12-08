@@ -7,18 +7,21 @@ namespace AF.TextMiner
 {
     public class TextCorpus
     {
-        static string punctuation = @",.:;!?&^-%$/()=¿\";
+        static string punctuation = @",.:;!?&^-%$/=¿\";
         private List<NGram> _ngrams;
 
         public string  Identifier { get; set; }
-        public List<NGram> NGrams { get { return _ngrams; } }
+        //public List<NGram> NGrams { get { return _ngrams; } }
 
-        public double TotalWords { get { return NGrams.Sum(x => (double) (x.Count ?? 0)); } }
+        public HashSet<NGram> NGrams_ {get; set;}
+
+        public double TotalWords { get { return NGrams_.Sum(x => (double) (x.Count ?? 0)); } }
 
         public TextCorpus(string identifier)
         {
             Identifier = identifier;
             _ngrams = new List<NGram>();
+            NGrams_ = new HashSet<NGram>();
         }
 
         public static TextCorpus GenerateNewCorpus(string corpusIdentifier, string textToProcess)
@@ -29,14 +32,15 @@ namespace AF.TextMiner
             {
                 foreach (string gram in GetWords(textToProcess, i))
                 {
-                    var tmpNgram = corpus.NGrams.Find(x => x.GramSize == i &&  x.Text == gram);
-                    if(tmpNgram != null)
+                    //var tmpNgram = corpus.NGrams.Find(x => x.GramSize == i &&  x.Text == gram);
+                    var tmpNgram = corpus.NGrams_.FirstOrDefault(x => x.GramSize == i && x.Hash == gram.GetHashCode());
+                    if (tmpNgram != null)
                     {
                         tmpNgram.Count++;
                     }
                     else
                     {
-                        corpus.NGrams.Add(new NGram() { Count = 1, GramSize = i, Text = gram });
+                        corpus.NGrams_.Add(new NGram() { Count = 1, GramSize = i, Text = gram });
                     }
                 }
             }
@@ -59,12 +63,7 @@ namespace AF.TextMiner
                     if (spaceCount == gramSize)
                     {
                         words.Add(tmpContent);
-
-                        
-
-                        //i = lastSpaceFound != 0 ? lastSpaceFound : i;
                         lastSpaceFound = 0;
-
                     }
                     spaceCount = 0;
                     tmpContent = string.Empty;
@@ -101,20 +100,27 @@ namespace AF.TextMiner
         public void CalculatePercentagesAndSort()
         {
             CalculatePercentages();
-            Sort();
+            //Sort();
         }
 
         private void CalculatePercentages()
         {
-            foreach(var element in _ngrams)
+            Dictionary<int, int> totalCounts = new Dictionary<int, int>(); //<GramSize, Total>
+            foreach (var element in NGrams_)
             {
-                element.Percentaje = (double) element.Count / _ngrams.Where(x => x.GramSize == element.GramSize).Sum(x => x.Count);
+                if (!totalCounts.ContainsKey(element.GramSize))
+                    totalCounts.Add(element.GramSize, NGrams_.Where(x => x.GramSize == element.GramSize).Sum(x => x.Count).Value);
+
+                element.Percentaje = (double)element.Count / totalCounts[element.GramSize];
+                //element.Percentaje = (double) element.Count / NGrams_.Where(x => x.GramSize == element.GramSize).Sum(x => x.Count);
+                //element.Percentaje = (double)element.Count / _ngrams.Where(x => x.GramSize == element.GramSize).Sum(x => x.Count);
             }
         }
 
-        private void Sort()
-        {
-            this._ngrams = this._ngrams.OrderBy(x => x.GramSize).ThenByDescending(x => x.Percentaje).ToList();
-        }
+        //private void Sort()
+        //{
+        //    NGrams_ = NGrams_.OrderBy(x => x.GramSize).ThenByDescending(x => x.Percentaje);.ToList();
+        //    //this._ngrams = this._ngrams.OrderBy(x => x.GramSize).ThenByDescending(x => x.Percentaje).ToList();
+        //}
     }
 }
