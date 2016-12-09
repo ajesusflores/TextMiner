@@ -37,6 +37,15 @@ namespace AF.TextMiner.Test
         }
 
         [Fact]
+        public void TextCorpus_Test5grams()
+        {
+            var corpus = AF.TextMiner.TextCorpus.GenerateNewCorpus("test", textToProcess, new byte[] { 5 });
+
+            Assert.True(corpus.NGrams_.Any(x => x.GramSize == 5));
+
+        }
+
+        [Fact]
         public void TextCleaning_TwitterAccount()
         {
             string text = AF.TextMiner.TextCleaning.CleaningActions.Clean(tweet_account, config);
