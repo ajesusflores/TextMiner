@@ -13,14 +13,14 @@ namespace AF.TextMiner.TextCleaning
         {
             if(config.ToLowerCase)
                 textToClean = textToClean.ToLower();
-            if(config.ReplaceDoubleSpace)
-                while (textToClean.Contains("  ")) textToClean = textToClean.Replace("  ", " ");
+            
             if (config.RemoveTwitterAccounts)
                 textToClean = RemoveTwitterAccounts(textToClean);
             if (config.RemoveLinks)
                 textToClean = RemoveLinks(textToClean);
-                    
 
+            if (config.ReplaceDoubleSpace)
+                while (textToClean.Contains("  ")) textToClean = textToClean.Replace("  ", " ");
             return textToClean;
         }
 
